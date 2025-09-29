@@ -48,4 +48,5 @@ public class Consultorio {
         this.tipoConsultorio = tipoConsultorio;
     }
 
+
 }
