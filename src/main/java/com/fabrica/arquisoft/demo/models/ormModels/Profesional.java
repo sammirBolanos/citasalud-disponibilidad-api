@@ -12,6 +12,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "tbl_profesionales")
@@ -37,6 +38,7 @@ public class Profesional {
     @Column(name = "activo")
     private Boolean activo;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "profesional", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DisponibilidadFranjaHoraria> disponibilidades;
 
