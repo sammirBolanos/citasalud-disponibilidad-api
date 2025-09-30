@@ -8,13 +8,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fabrica.arquisoft.demo.models.dtos.DisponibilidadRequestDto;
 import com.fabrica.arquisoft.demo.models.dtos.DisponibilidadResponseDTO;
 import com.fabrica.arquisoft.demo.service.DisponibilidadService;
-
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
 @RestController
 public class DisponibilidadController {
@@ -66,9 +65,11 @@ public class DisponibilidadController {
 
     //Crear nueva disponibilidad
     @PostMapping
-    public ResponseEntity<DisponibilidadResponseDTO> crear(@RequestBody DisponibilidadRequestDto dto) {
+    public ResponseEntity<?> crear(@RequestBody DisponibilidadRequestDto dto) {
+    
         DisponibilidadResponseDTO nueva = disponibilidadService.crearConValidacion(dto);
         return ResponseEntity.ok(nueva);
+        
     }
 
     //Actualizar disponibilidad existente

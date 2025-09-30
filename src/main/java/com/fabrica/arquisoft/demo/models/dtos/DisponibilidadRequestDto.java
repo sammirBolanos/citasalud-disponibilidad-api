@@ -5,5 +5,5 @@ public record DisponibilidadRequestDto(
     Integer idEspecialidad,
     Short idFranjaHoraria,
     Integer idConsultorio,
-    boolean activa
+    Boolean activa
 ){}
