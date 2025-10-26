@@ -64,7 +64,7 @@ public class DisponibilidadController {
     }
 
     //Crear nueva disponibilidad
-    @PostMapping
+    @PostMapping("/crear")
     public ResponseEntity<?> crear(@RequestBody DisponibilidadRequestDto dto) {
     
         DisponibilidadResponseDTO nueva = disponibilidadService.crearConValidacion(dto);
