@@ -40,6 +40,9 @@ public class DisponibilidadService {
     private DisponibilidadResponseDTO mapToDTO(DisponibilidadFranjaHoraria disponibilidad) {
         return new DisponibilidadResponseDTO(
                 disponibilidad.getIdDisponibilidad(),
+                disponibilidad.getConsultorio().getIdConsultorio(),
+                disponibilidad.getFranjaHoraria().getIdFranja(),
+                disponibilidad.getEspecialidad().getIdEspecialidad(),
                 disponibilidad.getProfesional().getIdProfesional(), // id del profesional
                 disponibilidad.getProfesional().getNombres(), // nombre del profesional
                 disponibilidad.getEspecialidad().getEspecialidad(), // nombre de la especialidad
