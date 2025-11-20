@@ -1,5 +1,7 @@
 package com.fabrica.arquisoft.demo.models.dtos;
 
+import java.time.LocalDate;
+
 public record DisponibilidadResponseDTO(
     Integer idDisponibilidad,
     Integer idConsultorio,
@@ -10,5 +12,6 @@ public record DisponibilidadResponseDTO(
     String nombreEspecialidad,
     String horaFranja,
     Integer numeroConsultorio,
-    Boolean activa
+    Boolean activa,
+    LocalDate fecha
 ) {}
