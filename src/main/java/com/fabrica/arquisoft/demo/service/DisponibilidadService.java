@@ -1,5 +1,6 @@
 package com.fabrica.arquisoft.demo.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,7 +49,8 @@ public class DisponibilidadService {
                 disponibilidad.getEspecialidad().getEspecialidad(), // nombre de la especialidad
                 disponibilidad.getFranjaHoraria().getHoraInicio().toString(), // pasamos LocalTime → String
                 disponibilidad.getConsultorio().getNumeroConsultorio(), // número de consultorio
-                disponibilidad.getActiva()
+                disponibilidad.getActiva(),
+                disponibilidad.getFecha()
         );
     }
 
@@ -99,25 +101,50 @@ public class DisponibilidadService {
     }
 
     public DisponibilidadResponseDTO crearConValidacion(DisponibilidadRequestDto dto) {
-        Profesional profesional = profesionalService.validarExiste(dto.idProfesional());
-        Especialidad especialidad = especialidadService.validarExiste(dto.idEspecialidad());
-        FranjaHoraria franja = franjaHorariaService.validarExiste(dto.idFranjaHoraria());
-        Consultorio consultorio = consultorioService.validarExiste(dto.idConsultorio());
 
-        DisponibilidadFranjaHoraria disponibilidad = mapToEntity(dto);
-        disponibilidad.setProfesional(profesional);
-        disponibilidad.setEspecialidad(especialidad);
-        disponibilidad.setFranjaHoraria(franja);
-        disponibilidad.setConsultorio(consultorio);
-
-        DisponibilidadFranjaHoraria guardada = disponibilidadRepository.save(disponibilidad);
-
-        return mapToDTO(guardada); // 👈 devolvemos DTO, no la entidad
+    // 1️⃣ Validaciones de reglas de negocio
+    if (dto.fecha().isBefore(LocalDate.now())) {
+        throw new IllegalArgumentException("La fecha no puede estar en el pasado");
     }
+
+    boolean existe = disponibilidadRepository
+        .existsByProfesionalIdProfesionalAndFechaAndFranjaHorariaIdFranja(
+            dto.idProfesional(),
+            dto.fecha(),
+            dto.idFranjaHoraria()
+        );
+
+    if (existe) {
+        throw new IllegalStateException(
+            "El profesional ya tiene una disponibilidad asignada para esa fecha y franja horaria"
+        );
+    }
+
+    // 2️⃣ Validar entidades externas
+    Profesional profesional = profesionalService.validarExiste(dto.idProfesional());
+    Especialidad especialidad = especialidadService.validarExiste(dto.idEspecialidad());
+    FranjaHoraria franja = franjaHorariaService.validarExiste(dto.idFranjaHoraria());
+    Consultorio consultorio = consultorioService.validarExiste(dto.idConsultorio());
+
+    // 3️⃣ Mapear DTO → Entidad
+    DisponibilidadFranjaHoraria disponibilidad = mapToEntity(dto);
+    disponibilidad.setProfesional(profesional);
+    disponibilidad.setEspecialidad(especialidad);
+    disponibilidad.setFranjaHoraria(franja);
+    disponibilidad.setConsultorio(consultorio);
+    disponibilidad.setFecha(dto.fecha());
+
+    // 4️⃣ Guardar
+    DisponibilidadFranjaHoraria guardada = disponibilidadRepository.save(disponibilidad);
+
+    return mapToDTO(guardada);
+}
+
 
     public Optional<DisponibilidadResponseDTO> actualizar(Integer id, DisponibilidadRequestDto dto) {
         return disponibilidadRepository.findById(id).map(actual -> {
             actual.setActiva(dto.activa());
+            actual.setFecha(dto.fecha());
             actual.setProfesional(profesionalService.validarExiste(dto.idProfesional()));
             actual.setEspecialidad(especialidadService.validarExiste(dto.idEspecialidad()));
             actual.setFranjaHoraria(franjaHorariaService.validarExiste(dto.idFranjaHoraria()));

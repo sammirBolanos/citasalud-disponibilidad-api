@@ -1,5 +1,6 @@
 package com.fabrica.arquisoft.demo.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -36,5 +37,13 @@ public interface DisponibilidadRepository extends JpaRepository<DisponibilidadFr
     // 🔹 Buscar por profesional y activas
     @EntityGraph(attributePaths = {"profesional", "especialidad", "consultorio", "franjaHoraria"})
     List<DisponibilidadFranjaHoraria> findByProfesional_IdProfesionalAndActivaTrue(Integer idProfesional);
+    
+    boolean existsByProfesionalIdProfesionalAndFechaAndFranjaHorariaIdFranja(
+        Integer idProfesional,
+        LocalDate fecha,
+        Short idFranja
+);
+
+
 
 }
