@@ -1,5 +1,7 @@
 package com.fabrica.arquisoft.demo.models.ormModels;
 
+import java.time.LocalDate;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -36,6 +38,17 @@ public class DisponibilidadFranjaHoraria {
     private Consultorio consultorio;
 
     private Boolean activa;
+
+    @Column(name = "fecha", nullable = false)
+    private LocalDate fecha;
+
+    public LocalDate getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(LocalDate fecha) {
+        this.fecha = fecha;
+    }
 
     public Integer getIdDisponibilidad() {
         return idDisponibilidad;
