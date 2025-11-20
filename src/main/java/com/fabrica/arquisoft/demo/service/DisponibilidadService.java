@@ -160,4 +160,13 @@ public class DisponibilidadService {
         disponibilidadRepository.deleteById(idDisponibilidad);
     }
 
+    // 🔹 Inactivar disponibilidades por bloqueo de profesional
+    public void inactivarDisponibilidadesPorBloqueo(Integer idProfesional, LocalDate fechaInicio, LocalDate fechaFin) {
+        List<DisponibilidadFranjaHoraria> disponibilidades = disponibilidadRepository
+            .findByProfesional_IdProfesionalAndFechaBetween(idProfesional, fechaInicio, fechaFin);
+        
+        disponibilidades.forEach(disp -> disp.setActiva(false));
+        disponibilidadRepository.saveAll(disponibilidades);
+    }
+
 }

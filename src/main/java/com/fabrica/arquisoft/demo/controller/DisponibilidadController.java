@@ -1,5 +1,6 @@
 package com.fabrica.arquisoft.demo.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -90,5 +91,23 @@ public ResponseEntity<?> actualizar(@PathVariable Integer id, @RequestBody Dispo
                 })
                 .orElse(ResponseEntity.notFound().build());
     }
+
+    // 🔹 Inactivar disponibilidades por bloqueo de profesional
+    @PostMapping("/inactivar-por-bloqueo")
+    public ResponseEntity<Void> inactivarPorBloqueo(@RequestBody DeshabilitarDisponibilidadesDto dto) {
+        disponibilidadService.inactivarDisponibilidadesPorBloqueo(
+            dto.idProfesional(), 
+            dto.fechaInicio(), 
+            dto.fechaFin()
+        );
+        return ResponseEntity.noContent().build();
+    }
+    
+    // DTO interno para recibir el request
+    public record DeshabilitarDisponibilidadesDto(
+        Integer idProfesional,
+        LocalDate fechaInicio,
+        LocalDate fechaFin
+    ) {}
 }
 

@@ -44,6 +44,12 @@ public interface DisponibilidadRepository extends JpaRepository<DisponibilidadFr
         Short idFranja
 );
 
-
+    // 🔹 Buscar disponibilidades por profesional y rango de fechas
+    @EntityGraph(attributePaths = {"profesional", "especialidad", "consultorio", "franjaHoraria"})
+    List<DisponibilidadFranjaHoraria> findByProfesional_IdProfesionalAndFechaBetween(
+        Integer idProfesional,
+        LocalDate fechaInicio,
+        LocalDate fechaFin
+    );
 
 }
